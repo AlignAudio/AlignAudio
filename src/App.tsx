@@ -105,18 +105,19 @@ function VCSection() {
       {VC_SUBTASKS.map((subtask) => (
         <div key={subtask.id} className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div className="p-6 border-b border-slate-100 bg-slate-50/50">
-            <div className="flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-violet-500" />
-              <h4 className="text-sm font-bold uppercase tracking-widest text-slate-500">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="px-2.5 py-0.5 rounded-full bg-violet-100 text-violet-700 text-xs font-bold uppercase tracking-wider">
                 {subtask.title}
-              </h4>
-              <span className="text-xs text-slate-400">— {subtask.description}</span>
+              </span>
             </div>
+            <p className="text-sm text-slate-500 font-medium">
+              {subtask.description}
+            </p>
           </div>
 
           <div className="p-6 space-y-10">
             {VC_CASES[subtask.id].map((vcCase, pairIdx) => (
-              <div key={vcCase.id}>
+              <div key={vcCase.id} className="space-y-4">
                 {/* Case header */}
                 <div className="flex items-center gap-3 mb-2">
                   <span className="px-2.5 py-0.5 rounded-full bg-violet-100 text-violet-700 text-xs font-bold uppercase tracking-wider">
@@ -124,59 +125,57 @@ function VCSection() {
                   </span>
                 </div>
                 {vcCase.text && (
-                  <p className="text-lg text-slate-700 font-medium mb-6">
+                  <p className="text-lg text-slate-700 font-medium">
                     &ldquo;{vcCase.text}&rdquo;
                   </p>
                 )}
 
-                <div className="space-y-6">
-                  {(['clean', 'noisy'] as Condition[]).map((condition) => (
-                    <div key={condition} className="space-y-4">
-                      <div className="flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${condition === 'clean' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
-                        <h4 className="text-sm font-bold uppercase tracking-widest text-slate-500">
-                          {condition === 'clean' ? 'Clean Condition' : 'Noisy Condition'}
-                        </h4>
-                      </div>
+                {(['clean', 'noisy'] as Condition[]).map((condition) => (
+                  <div key={condition} className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <div className={`w-2 h-2 rounded-full ${condition === 'clean' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                      <h4 className="text-sm font-bold uppercase tracking-widest text-slate-500">
+                        {condition === 'clean' ? 'Clean Condition' : 'Noisy Condition'}
+                      </h4>
+                    </div>
 
-                      {/* Row 1: content + timber inputs */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="bg-slate-50 rounded-xl p-4 border border-dashed border-slate-300">
-                          <span className="block text-xs font-bold text-slate-400 uppercase mb-2">Content</span>
-                          <audio controls className="w-full h-8" src={getVCAudioPath(condition, subtask.id, vcCase.id, 'content.wav')} />
-                        </div>
-                        <div className="bg-slate-50 rounded-xl p-4 border border-dashed border-slate-300">
-                          <span className="block text-xs font-bold text-slate-400 uppercase mb-2">Timber</span>
-                          <audio controls className="w-full h-8" src={getVCAudioPath(condition, subtask.id, vcCase.id, 'timber.wav')} />
-                        </div>
+                    {/* Row 1: content + timber inputs */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="bg-slate-50 rounded-xl p-4 border border-dashed border-slate-300">
+                        <span className="block text-xs font-bold text-slate-400 uppercase mb-2">Content</span>
+                        <audio controls className="w-full h-8" src={getVCAudioPath(condition, subtask.id, vcCase.id, 'content.wav')} />
                       </div>
-
-                      {/* Row 2: model outputs */}
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                        {VC_MODELS.map((model) => (
-                          <div
-                            key={model.id}
-                            className={`rounded-xl p-4 border transition-all ${
-                              model.id === 'AlignAudio'
-                                ? 'bg-blue-50 border-blue-200 ring-1 ring-blue-200'
-                                : 'bg-white border-slate-100'
-                            }`}
-                          >
-                            <span className={`block text-xs font-bold uppercase mb-2 ${
-                              model.id === 'AlignAudio' ? 'text-blue-600' : 'text-slate-400'
-                            }`}>
-                              {model.title}
-                              {model.id === 'AlignAudio' && (
-                                <span className="ml-1 text-[10px] bg-blue-600 text-white px-1 rounded">Ours</span>
-                              )}
-                            </span>
-                            <audio controls className="w-full h-8" src={getVCAudioPath(condition, subtask.id, vcCase.id, `${model.id}.wav`)} />
-                          </div>
-                        ))}
+                      <div className="bg-slate-50 rounded-xl p-4 border border-dashed border-slate-300">
+                        <span className="block text-xs font-bold text-slate-400 uppercase mb-2">Timber</span>
+                        <audio controls className="w-full h-8" src={getVCAudioPath(condition, subtask.id, vcCase.id, 'timber.wav')} />
                       </div>
                     </div>
-                  ))}
-                </div>
+
+                    {/* Row 2: model outputs */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                      {VC_MODELS.map((model) => (
+                        <div
+                          key={model.id}
+                          className={`rounded-xl p-4 border transition-all ${
+                            model.id === 'AlignAudio'
+                              ? 'bg-blue-50 border-blue-200 ring-1 ring-blue-200'
+                              : 'bg-white border-slate-100'
+                          }`}
+                        >
+                          <span className={`block text-xs font-bold uppercase mb-2 ${
+                            model.id === 'AlignAudio' ? 'text-blue-600' : 'text-slate-400'
+                          }`}>
+                            {model.title}
+                            {model.id === 'AlignAudio' && (
+                              <span className="ml-1 text-[10px] bg-blue-600 text-white px-1 rounded">Ours</span>
+                            )}
+                          </span>
+                          <audio controls className="w-full h-8" src={getVCAudioPath(condition, subtask.id, vcCase.id, `${model.id}.wav`)} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             ))}
           </div>
@@ -283,7 +282,7 @@ export default function App() {
                     </h4>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                     {/* Input Speech */}
                     <div className="bg-slate-50 rounded-xl p-4 border border-dashed border-slate-300">
                       <span className="block text-xs font-bold text-slate-400 uppercase mb-2">Input Speech</span>
@@ -310,7 +309,7 @@ export default function App() {
                       </h4>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                       {/* Input Speech */}
                       <div className="bg-slate-50 rounded-xl p-4 border border-dashed border-slate-300">
                         <span className="block text-xs font-bold text-slate-400 uppercase mb-2">Input Speech</span>
@@ -334,10 +333,9 @@ export default function App() {
                             {model.id === '4' && <span className="ml-1 text-[10px] bg-blue-600 text-white px-1 rounded">Ours</span>}
                           </span>
 
+                          {/* GT → ST5 + FM under clean condition: use the Noisy STAR sample */}
                           {condition === 'clean' && model.id === '3' ? (
-                            <div className="h-8 flex items-center justify-center text-[10px] text-slate-400 text-center leading-tight">
-                              Not processed by SE module
-                            </div>
+                            <audio controls className="w-full h-8" src={`samples/${item.id}/noisy_1.wav`} />
                           ) : (
                             <audio controls className="w-full h-8" src={`samples/${item.id}/${condition}_${model.id}.wav`} />
                           )}
